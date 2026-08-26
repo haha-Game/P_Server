@@ -1,0 +1,9 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="DummyClient/DummyClient.vcxproj" />
+  <Project Path="GameServer/GameServer.vcxproj" />
+  <Project Path="ServerCore/ServerCore.vcxproj" />
+</Solution>
