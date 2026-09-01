@@ -3,7 +3,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="DummyClient/DummyClient.vcxproj" />
-  <Project Path="GameServer/GameServer.vcxproj" />
-  <Project Path="ServerCore/ServerCore.vcxproj" />
+  <Project Path="DummyClient/DummyClient.vcxproj" Id="692278ba-4fc3-487f-9aa5-58ccf91b7e94" />
+  <Project Path="GameServer/GameServer.vcxproj" Id="397efcd9-8ab5-45ba-823a-3b1e9e6626f7" />
+  <Project Path="ServerCore/ServerCore.vcxproj" Id="41abbf16-8d24-4788-b386-1f5e95837816" />
 </Solution>
