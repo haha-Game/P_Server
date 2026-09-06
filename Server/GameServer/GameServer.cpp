@@ -7,6 +7,8 @@
 #include <future>
 #include "ThreadManager.h"
 
+#include <chrono>
+
 #include "RefCounting.h"
 #include "Memory.h"
 #include "Allocator.h"
@@ -50,22 +52,27 @@ class Dog
 
 };
 
+class Healer
+{
+public:
+	int32 _hp = rand() % 1000;
+};
+
 int main()
 {
-	{
-		shared_ptr<Player> player = MakeShared<Knight>();
-
-		shared_ptr<Archer> archer = TypeCast<Archer>(player);
-		bool canCast = CanCast<Mage>(player);
-
-	}
-
 	for (int32 i = 0; i < 5; i++)
 	{
 		GThreadManager->Launch([]()
 			{
 				while (true)
 				{
+					Healer* healer = xnew<Healer>();
+
+					cout << healer->_hp << endl;
+
+					this_thread::sleep_for(200ms);
+
+					xdelete(healer);
 				}
 			});
 	}
