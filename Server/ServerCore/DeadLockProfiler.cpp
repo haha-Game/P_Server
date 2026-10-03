@@ -2,15 +2,15 @@
 #include "DeadLockProfiler.h"
 
 
-/*------------------------
-	 DeadLockProfiler
--------------------------*/
+/*--------------------
+	DeadLockProfiler
+---------------------*/
 
 void DeadLockProfiler::PushLock(const char* name)
 {
 	LockGuard guard(_lock);
 
-	//아이디를 찾거나 발급하기
+	// 아이디를 찾거나 발급한다.
 	int32 lockId = 0;
 
 	auto findIt = _nameToId.find(name);
@@ -26,10 +26,10 @@ void DeadLockProfiler::PushLock(const char* name)
 	}
 
 	// 잡고 있는 락이 있었다면
-	if (_lockStack.empty() == false)
+	if (LLockStack.empty() == false)
 	{
-		// 기존에 발견되지 않은 케이스라면 데드락 여부 다시 확인
-		const int32 prevId = _lockStack.top();
+		// 기존에 발견되지 않은 케이스라면 데드락 여부 다시 확인한다.
+		const int32 prevId = LLockStack.top();
 		if (lockId != prevId)
 		{
 			set<int32>& history = _lockHistory[prevId];
@@ -41,22 +41,21 @@ void DeadLockProfiler::PushLock(const char* name)
 		}
 	}
 
-	_lockStack.push(lockId);
-
+	LLockStack.push(lockId);
 }
 
 void DeadLockProfiler::PopLock(const char* name)
 {
 	LockGuard guard(_lock);
 
-	if (_lockStack.empty())
+	if (LLockStack.empty())
 		CRASH("MULTIPLE_UNLOCK");
 
 	int32 lockId = _nameToId[name];
-	if (_lockStack.top() != lockId)
+	if (LLockStack.top() != lockId)
 		CRASH("INVALID_UNLOCK");
 
-	_lockStack.pop();
+	LLockStack.pop();
 }
 
 void DeadLockProfiler::CheckCycle()
@@ -68,17 +67,12 @@ void DeadLockProfiler::CheckCycle()
 	_parent = vector<int32>(lockCount, -1);
 
 	for (int32 lockId = 0; lockId < lockCount; lockId++)
-	{
 		Dfs(lockId);
-	}
 
-	// 연산이 끝났으면 정리
+	// 연산이 끝났으면 정리한다.
 	_discoveredOrder.clear();
 	_finished.clear();
 	_parent.clear();
-
-
-
 }
 
 void DeadLockProfiler::Dfs(int32 here)
@@ -88,7 +82,7 @@ void DeadLockProfiler::Dfs(int32 here)
 
 	_discoveredOrder[here] = _discoveredCount++;
 
-	// 모든 인접한 정점을 순회
+	// 모든 인접한 정점을 순회한다.
 	auto findIt = _lockHistory.find(here);
 	if (findIt == _lockHistory.end())
 	{
@@ -99,7 +93,7 @@ void DeadLockProfiler::Dfs(int32 here)
 	set<int32>& nextSet = findIt->second;
 	for (int32 there : nextSet)
 	{
-		// 아직 방문한 적이 없다면 방문
+		// 아직 방문한 적이 없다면 방문한다.
 		if (_discoveredOrder[there] == -1)
 		{
 			_parent[there] = here;
@@ -107,19 +101,19 @@ void DeadLockProfiler::Dfs(int32 here)
 			continue;
 		}
 
-		// here가 there보다 먼저 발견되었으면 there는 here의 후손이다.(순방향 간선)
+		// here가 there보다 먼저 발견되었다면, there는 here의 후손이다. (순방향 간선)
 		if (_discoveredOrder[here] < _discoveredOrder[there])
 			continue;
 
-		// 순방향이 아니고 Dfs(there)가 아직 종료하지 않았다면, there는 here의 선조이다.(역방향 간선)
+		// 순방향이 아니고, Dfs(there)가 아직 종료하지 않았다면, there는 here의 선조이다. (역방향 간선)
 		if (_finished[there] == false)
 		{
-			printf("%s->%s\n", _idToName[here], _idToName[there]);
+			printf("%s -> %s\n", _idToName[here], _idToName[there]);
 
 			int32 now = here;
 			while (true)
 			{
-				printf("%s->%s\n", _idToName[_parent[now]], _idToName[now]);
+				printf("%s -> %s\n", _idToName[_parent[now]], _idToName[now]);
 				now = _parent[now];
 				if (now == there)
 					break;
@@ -130,5 +124,4 @@ void DeadLockProfiler::Dfs(int32 here)
 	}
 
 	_finished[here] = true;
-
 }
