@@ -19,6 +19,9 @@
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="GameSession.cpp" />
+    <ClCompile Include="ServerPacketHandler.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -28,5 +31,8 @@
       <Filter>Main</Filter>
     </ClInclude>
     <ClInclude Include="GameSession.h" />
+    <ClInclude Include="ServerPacketHandler.h">
+      <Filter>Main</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
