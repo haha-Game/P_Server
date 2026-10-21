@@ -12,8 +12,8 @@ public:
 	SendBuffer(SendBufferChunkRef owner, BYTE* buffer, uint32 allocSize);
 	~SendBuffer();
 
-	BYTE*       Buffer() { return _buffer; }
-	uint32      AllocSize() { return _allocSize; }
+	BYTE* Buffer() { return _buffer; }
+	uint32		AllocSize() { return _allocSize; }
 	uint32		WriteSize() { return _writeSize; }
 	void		Close(uint32 writeSize);
 

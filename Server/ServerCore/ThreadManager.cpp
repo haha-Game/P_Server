@@ -3,13 +3,13 @@
 #include "CoreTLS.h"
 #include "CoreGlobal.h"
 
-/*------------------------
-		ThreadManager
--------------------------*/
+/*------------------
+	ThreadManager
+-------------------*/
 
 ThreadManager::ThreadManager()
 {
-	// Main Tread
+	// Main Thread
 	InitTLS();
 }
 
@@ -32,7 +32,7 @@ void ThreadManager::Launch(function<void(void)> callback)
 
 void ThreadManager::Join()
 {
-	for (std::thread& t : _threads)
+	for (thread& t : _threads)
 	{
 		if (t.joinable())
 			t.join();
@@ -42,8 +42,8 @@ void ThreadManager::Join()
 
 void ThreadManager::InitTLS()
 {
-	static Atomic<uint32> STreadId = 1;
-	LThreadId = STreadId.fetch_add(1);
+	static Atomic<uint32> SThreadId = 1;
+	LThreadId = SThreadId.fetch_add(1);
 }
 
 void ThreadManager::DestroyTLS()

@@ -1,11 +1,15 @@
 #pragma once
 #include "Types.h"
 
-/*-----------------------
-      RW SpinLock
-      W : WriteFlag(Exclusive Lock Owner ThreadId , 상위 16 비트)
-      R : ReadFlag(shared_ptr Lock Count , 하위 16 비트)
------------------------*/
+/*----------------
+    RW SpinLock
+-----------------*/
+
+/*--------------------------------------------
+[WWWWWWWW][WWWWWWWW][RRRRRRRR][RRRRRRRR]
+W : WriteFlag (Exclusive Lock Owner ThreadId)
+R : ReadFlag (Shared Lock Count)
+---------------------------------------------*/
 
 class Lock
 {
@@ -15,7 +19,7 @@ class Lock
         MAX_SPIN_COUNT = 5000,
         WRITE_THREAD_MASK = 0xFFFF'0000,
         READ_COUNT_MASK = 0x0000'FFFF,
-        EMPTY_FLAG = 0x0000'0000,
+        EMPTY_FLAG = 0x0000'0000
     };
 
 public:
@@ -29,9 +33,9 @@ private:
     uint16 _writeCount = 0;
 };
 
-/*-----------------------
-      LockGuards
------------------------*/
+/*----------------
+    LockGuards
+-----------------*/
 
 class ReadLockGuard
 {
@@ -53,5 +57,4 @@ public:
 private:
     Lock& _lock;
     const char* _name;
-
 };
