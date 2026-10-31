@@ -1,6 +1,4 @@
 ﻿#include "pch.h"
-#include <chrono>
-#include <thread>
 #include "ThreadManager.h"
 #include "Service.h"
 #include "Session.h"
@@ -19,10 +17,9 @@ public:
 
 	virtual void OnConnected() override
 	{
-		Protocol::C_MOVE movePacket;
-		auto sendBuffer = ServerPacketHandler::MakeSendBuffer(movePacket);
-
-		//cout << "Connected To Server" << endl;
+		Protocol::C_LOGIN pkt;
+		auto sendBuffer = ServerPacketHandler::MakeSendBuffer(pkt);
+		Send(sendBuffer);
 	}
 
 	virtual void OnRecvPacket(BYTE* buffer, int32 len) override
@@ -49,13 +46,13 @@ int main()
 {
 	ServerPacketHandler::Init();
 
-	std::this_thread::sleep_for(std::chrono::seconds(1));
+	this_thread::sleep_for(1s);
 
 	ClientServiceRef service = MakeShared<ClientService>(
 		NetAddress(L"127.0.0.1", 7777),
 		MakeShared<IocpCore>(),
 		MakeShared<ServerSession>, // TODO : SessionManager 등
-		1);
+		100);
 
 	ASSERT_CRASH(service->Start());
 
@@ -68,6 +65,16 @@ int main()
 					service->GetIocpCore()->Dispatch();
 				}
 			});
+	}
+
+	Protocol::C_CHAT chatPkt;
+	chatPkt.set_msg(u8"Hello World !");
+	auto sendBuffer = ServerPacketHandler::MakeSendBuffer(chatPkt);
+
+	while (true)
+	{
+		service->Broadcast(sendBuffer);
+		this_thread::sleep_for(1s);
 	}
 
 	GThreadManager->Join();

@@ -26,7 +26,7 @@ public:
 	virtual ~Session();
 
 public:
-	/* ì™¸ë¶€ì—ì„œ ì‚¬ìš© */
+						/* ¿ÜºÎ¿¡¼­ »ç¿ë */
 	void				Send(SendBufferRef sendBuffer);
 	bool				Connect();
 	void				Disconnect(const WCHAR* cause);
@@ -35,7 +35,7 @@ public:
 	void				SetService(shared_ptr<Service> service) { _service = service; }
 
 public:
-	/* ì •ë³´ ê´€ë ¨ */
+						/* Á¤º¸ °ü·Ã */
 	void				SetNetAddress(NetAddress address) { _netAddress = address; }
 	NetAddress			GetAddress() { return _netAddress; }
 	SOCKET				GetSocket() { return _socket; }
@@ -43,12 +43,12 @@ public:
 	SessionRef			GetSessionRef() { return static_pointer_cast<Session>(shared_from_this()); }
 
 private:
-	/* ì¸í„°í˜ì´ìŠ¤ êµ¬í˜„ */
+						/* ÀÎÅÍÆäÀÌ½º ±¸Çö */
 	virtual HANDLE		GetHandle() override;
 	virtual void		Dispatch(class IocpEvent* iocpEvent, int32 numOfBytes = 0) override;
 
 private:
-	/* ì „ì†¡ ê´€ë ¨ */
+						/* Àü¼Û °ü·Ã */
 	bool				RegisterConnect();
 	bool				RegisterDisconnect();
 	void				RegisterRecv();
@@ -62,11 +62,11 @@ private:
 	void				HandleError(int32 errorCode);
 
 protected:
-	/* ì»¨í…ì¸  ì½”ë“œì—ì„œ ì¬ì •ì˜ */
-	virtual void		OnConnected() {}
+						/* ÄÁÅÙÃ÷ ÄÚµå¿¡¼­ ÀçÁ¤ÀÇ */
+	virtual void		OnConnected() { }
 	virtual int32		OnRecv(BYTE* buffer, int32 len) { return len; }
-	virtual void		OnSend(int32 len) {}
-	virtual void		OnDisconnected() {}
+	virtual void		OnSend(int32 len) { }
+	virtual void		OnDisconnected() { }
 
 private:
 	weak_ptr<Service>	_service;
@@ -77,15 +77,15 @@ private:
 private:
 	USE_LOCK;
 
-	/* ìˆ˜ì‹  ê´€ë ¨ */
+							/* ¼ö½Å °ü·Ã */
 	RecvBuffer				_recvBuffer;
 
-	/* ì†¡ì‹  ê´€ë ¨ */
+							/* ¼Û½Å °ü·Ã */
 	Queue<SendBufferRef>	_sendQueue;
 	Atomic<bool>			_sendRegistered = false;
 
 private:
-	/* IocpEvent ì¬ì‚¬ìš© */
+						/* IocpEvent Àç»ç¿ë */
 	ConnectEvent		_connectEvent;
 	DisconnectEvent		_disconnectEvent;
 	RecvEvent			_recvEvent;
@@ -99,7 +99,7 @@ private:
 struct PacketHeader
 {
 	uint16 size;
-	uint16 id; // í”„ë¡œí† ì½œID (ex. 1=ë¡œê·¸ì¸, 2=ì´ë™ìš”ì²­)
+	uint16 id; // ÇÁ·ÎÅäÄİID (ex. 1=·Î±×ÀÎ, 2=ÀÌµ¿¿äÃ»)
 };
 
 class PacketSession : public Session

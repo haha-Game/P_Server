@@ -66,12 +66,12 @@ void* Memory::Allocate(int32 size)
 #else
 	if (allocSize > MAX_ALLOC_SIZE)
 	{
-		// ë©”ëª¨ë¦¬ í’€ë§ ìµœëŒ€ í¬ê¸°ë¥¼ ë²—ì–´ë‚˜ë©´ ì¼ë°˜ í• ë‹¹
+		// ¸Ş¸ğ¸® Ç®¸µ ÃÖ´ë Å©±â¸¦ ¹ş¾î³ª¸é ÀÏ¹İ ÇÒ´ç
 		header = reinterpret_cast<MemoryHeader*>(::_aligned_malloc(allocSize, SLIST_ALIGNMENT));
 	}
 	else
 	{
-		// ë©”ëª¨ë¦¬ í’€ì—ì„œ êº¼ë‚´ì˜¨ë‹¤
+		// ¸Ş¸ğ¸® Ç®¿¡¼­ ²¨³»¿Â´Ù
 		header = _poolTable[allocSize]->Pop();
 	}
 #endif	
@@ -91,12 +91,12 @@ void Memory::Release(void* ptr)
 #else
 	if (allocSize > MAX_ALLOC_SIZE)
 	{
-		// ë©”ëª¨ë¦¬ í’€ë§ ìµœëŒ€ í¬ê¸°ë¥¼ ë²—ì–´ë‚˜ë©´ ì¼ë°˜ í•´ì œ
+		// ¸Ş¸ğ¸® Ç®¸µ ÃÖ´ë Å©±â¸¦ ¹ş¾î³ª¸é ÀÏ¹İ ÇØÁ¦
 		::_aligned_free(header);
 	}
 	else
 	{
-		// ë©”ëª¨ë¦¬ í’€ì— ë°˜ë‚©í•œë‹¤
+		// ¸Ş¸ğ¸® Ç®¿¡ ¹İ³³ÇÑ´Ù
 		_poolTable[allocSize]->Push(header);
 	}
 #endif	

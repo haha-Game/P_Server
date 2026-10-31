@@ -7,8 +7,8 @@
 class RefCountable
 {
 public:
-	RefCountable() : _refCount(1) {}
-	virtual ~RefCountable() {}
+	RefCountable() : _refCount(1) { }
+	virtual ~RefCountable() { }
 
 	int32 GetRefCount() { return _refCount; }
 
@@ -35,21 +35,21 @@ template<typename T>
 class TSharedPtr
 {
 public:
-	TSharedPtr() {}
+	TSharedPtr() { }
 	TSharedPtr(T* ptr) { Set(ptr); }
 
-	// ë³µì‚¬
+	// º¹»ç
 	TSharedPtr(const TSharedPtr& rhs) { Set(rhs._ptr); }
-	// ì´ë™
+	// ÀÌµ¿
 	TSharedPtr(TSharedPtr&& rhs) { _ptr = rhs._ptr; rhs._ptr = nullptr; }
-	// ìƒì† ê´€ê³„ ë³µì‚¬
+	// »ó¼Ó °ü°è º¹»ç
 	template<typename U>
 	TSharedPtr(const TSharedPtr<U>& rhs) { Set(static_cast<T*>(rhs._ptr)); }
 
 	~TSharedPtr() { Release(); }
 
 public:
-	// ë³µì‚¬ ì—°ì‚°ì
+	// º¹»ç ¿¬»êÀÚ
 	TSharedPtr& operator=(const TSharedPtr& rhs)
 	{
 		if (_ptr != rhs._ptr)
@@ -60,7 +60,7 @@ public:
 		return *this;
 	}
 
-	// ì´ë™ ì—°ì‚°ì
+	// ÀÌµ¿ ¿¬»êÀÚ
 	TSharedPtr& operator=(TSharedPtr&& rhs)
 	{
 		Release();
@@ -74,11 +74,11 @@ public:
 	bool		operator!=(const TSharedPtr& rhs) const { return _ptr != rhs._ptr; }
 	bool		operator!=(T* ptr) const { return _ptr != ptr; }
 	bool		operator<(const TSharedPtr& rhs) const { return _ptr < rhs._ptr; }
-	T* operator*() { return _ptr; }
-	const T* operator*() const { return _ptr; }
-	operator T* () const { return _ptr; }
-	T* operator->() { return _ptr; }
-	const T* operator->() const { return _ptr; }
+	T*			operator*() { return _ptr; }
+	const T*	operator*() const { return _ptr; }
+				operator T* () const { return _ptr; }
+	T*			operator->() { return _ptr; }
+	const T*	operator->() const { return _ptr; }
 
 	bool IsNull() { return _ptr == nullptr; }
 
